@@ -59,21 +59,24 @@ class PlantDetailFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        val binding = DataBindingUtil.inflate<FragmentPlantDetailBinding>(
-            inflater,
-            R.layout.fragment_plant_detail,
-            container,
-            false
-        ).apply {
+//        val binding = DataBindingUtil.inflate<FragmentPlantDetailBinding>(
+//            inflater,
+//            R.layout.fragment_plant_detail,
+//            container,
+//            false
+//        )
+        val binding = FragmentPlantDetailBinding.inflate(inflater, container, false)
+                .apply {
             viewModel = plantDetailViewModel
             lifecycleOwner = viewLifecycleOwner
-            callback = Callback { plant ->
-                plant?.let {
-                    hideAppBarFab(fab)
-                    plantDetailViewModel.addPlantToGarden()
-                    Snackbar.make(root, R.string.added_plant_to_garden, Snackbar.LENGTH_LONG)
-                        .show()
+            callback = object : Callback {
+                override fun add(plant: Plant?) {
+                    plant?.let {
+                        hideAppBarFab(fab)
+                        plantDetailViewModel.addPlantToGarden()
+                        Snackbar.make(root, R.string.added_plant_to_garden, Snackbar.LENGTH_LONG)
+                                .show()
+                    }
                 }
             }
 
@@ -160,7 +163,7 @@ class PlantDetailFragment : Fragment() {
         fab.hide()
     }
 
-    fun interface Callback {
+    interface Callback {
         fun add(plant: Plant?)
     }
 }
