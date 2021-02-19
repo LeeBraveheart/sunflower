@@ -17,21 +17,25 @@
 package com.google.samples.apps.sunflower.data
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import androidx.sqlite.db.SupportSQLiteDatabase
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.google.samples.apps.sunflower.utilities.DATABASE_NAME
+import com.google.samples.apps.sunflower.workers.MyWorker
 import com.google.samples.apps.sunflower.workers.SeedDatabaseWorker
+import java.util.concurrent.TimeUnit
 
 /**
  * The Room database for this app
  */
 @Database(entities = [GardenPlanting::class, Plant::class], version = 1, exportSchema = false)
-@TypeConverters(Converters::class)
+//@TypeConverters(Converters::class)
+@TypeConverters(MyConverters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gardenPlantingDao(): GardenPlantingDao
     abstract fun plantDao(): PlantDao
@@ -39,7 +43,8 @@ abstract class AppDatabase : RoomDatabase() {
     companion object {
 
         // For Singleton instantiation
-        @Volatile private var instance: AppDatabase? = null
+        @Volatile
+        private var instance: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
             return instance ?: synchronized(this) {
@@ -51,16 +56,24 @@ abstract class AppDatabase : RoomDatabase() {
         // https://medium.com/google-developers/7-pro-tips-for-room-fbadea4bfbd1#4785
         private fun buildDatabase(context: Context): AppDatabase {
             return Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
-                .addCallback(
-                    object : RoomDatabase.Callback() {
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            super.onCreate(db)
-                            val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>().build()
-                            WorkManager.getInstance(context).enqueue(request)
-                        }
-                    }
-                )
-                .build()
+                    .addCallback(
+                            object : RoomDatabase.Callback() {
+                                override fun onCreate(db: SupportSQLiteDatabase) {
+                                    super.onCreate(db)
+                                    val request = OneTimeWorkRequestBuilder<SeedDatabaseWorker>()
+                                            .build()
+                                    WorkManager.getInstance(context).enqueue(request)
+
+//                                    val build = PeriodicWorkRequestBuilder<MyWorker>(2, TimeUnit.HOURS)
+//                                            .setConstraints(Constraints.Builder()
+//                                                    .setRequiredNetworkType(NetworkType.CONNECTED)
+//                                                    .setRequiresBatteryNotLow(true)
+//                                                    .build())
+//                                            .build()
+                                }
+                            }
+                    )
+                    .build()
         }
     }
 }

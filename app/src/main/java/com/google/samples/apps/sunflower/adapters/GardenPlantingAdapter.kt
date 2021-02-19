@@ -28,6 +28,7 @@ import com.google.samples.apps.sunflower.HomeViewPagerFragmentDirections
 import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.data.PlantAndGardenPlantings
 import com.google.samples.apps.sunflower.databinding.ListItemGardenPlantingBinding
+import com.google.samples.apps.sunflower.databinding.ListItemPlantBinding
 import com.google.samples.apps.sunflower.viewmodels.PlantAndGardenPlantingsViewModel
 
 class GardenPlantingAdapter :
@@ -37,12 +38,17 @@ class GardenPlantingAdapter :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.list_item_garden_planting,
-                parent,
-                false
-            )
+                ListItemGardenPlantingBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
+//            DataBindingUtil.inflate(
+//                LayoutInflater.from(parent.context),
+//                R.layout.list_item_garden_planting,
+//                parent,
+//                false
+//            )
         )
     }
 
