@@ -15,6 +15,7 @@
   -->
 
 <resources>
+    <string name="app_name" translatable="false">向日葵</string>
     <string name="menu_filter_by_grow_zone">按生長區篩選</string>
     <string name="plant_detail_image_content_description">植物圖片</string>
     <string name="my_garden_title">我的花園</string>
@@ -45,4 +46,5 @@
     <string name="gallery_title">(translate me) Photos by Unsplash</string>
     <string name="gallery_content_description">(translate me) Navigate to gallery screen</string>
 
+    <string name="date_formate">yyyy年MM月dd日 HH时mm分ss秒</string>
 </resources>

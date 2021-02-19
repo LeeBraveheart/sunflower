@@ -17,6 +17,8 @@
 package com.google.samples.apps.sunflower.data
 
 import androidx.room.TypeConverter
+import com.google.samples.apps.sunflower.MainApplication
+import com.google.samples.apps.sunflower.R
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,15 +27,21 @@ import java.util.*
 @date : 2021/2/19 10:56
  */
 class MyConverters {
-    @TypeConverter fun longToMyDate(value:Long):MyDate= MyDate(value)
-    @TypeConverter fun myDateToLong(value:MyDate):Long= value.toLong()
+    @TypeConverter
+    fun longToMyDate(value: Long): MyDate = MyDate(value)
+
+    @TypeConverter
+    fun myDateToLong(value: MyDate): Long = value.toLong()
 }
 
 class MyDate(private val value: Long) {
-    fun time():String= dateFormat.format(Date(value))
-    fun toLong(): Long=Date(value).time
+    fun time(): String = dateFormat.format(Date(value))
+    fun toLong(): Long = Date(value).time
+
+
+    private val dateFormat = SimpleDateFormat(MainApplication.instance.resources.getString(R.string.date_formate), Locale.getDefault())
 
     companion object {
-        private val dateFormat = SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒", Locale.CHINESE)
+        val instance = MyDate(0)//默认值
     }
 }
